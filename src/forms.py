@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 import streamlit as st
 
@@ -53,27 +53,50 @@ def trajet_inputs(
     }
 
 
-def missionnaire_inputs() -> dict:
+def parse_date(value: str) -> date:
+    return datetime.strptime(value, "%Y-%m-%d").date()
+
+
+def missionnaire_inputs(profile: dict | None = None) -> dict:
+    profile = profile or {}
+
     st.header("1. Missionnaire")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        nom = st.text_input("Nom")
-        prenom = st.text_input("Prénom")
+        nom = st.text_input("Nom", value=profile.get("nom", ""))
+        prenom = st.text_input("Prénom", value=profile.get("prenom", ""))
         date_naissance = st.date_input(
             "Date de naissance",
-            value=date(2000, 1, 1),
+            value=parse_date(
+                profile.get("date_naissance", "2000-01-01")
+            ),
         )
-        mail = st.text_input("Mail")
-        telephone = st.text_input("Téléphone portable")
+        mail = st.text_input("Mail", value=profile.get("mail", ""))
+        telephone = st.text_input(
+            "Téléphone portable",
+            value=profile.get("telephone", ""),
+        )
 
     with col2:
-        adresse = st.text_input("Adresse personnelle")
-        code_postal = st.text_input("Code postal")
-        ville = st.text_input("Ville")
-        nationalite = st.text_input("Nationalité", value="Française")
-        profession = st.text_input("Profession / qualité")
+        adresse = st.text_input(
+            "Adresse personnelle",
+            value=profile.get("adresse", ""),
+        )
+        code_postal = st.text_input(
+            "Code postal",
+            value=profile.get("code_postal", ""),
+        )
+        ville = st.text_input("Ville", value=profile.get("ville", ""))
+        nationalite = st.text_input(
+            "Nationalité",
+            value=profile.get("nationalite", "Française"),
+        )
+        profession = st.text_input(
+            "Profession / qualité",
+            value=profile.get("profession", ""),
+        )
 
     return locals()
 

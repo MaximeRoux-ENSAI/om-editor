@@ -6,18 +6,37 @@ from src.context_builder import build_context
 from src.docx_renderer import render_ordre_mission
 from src.forms import mission_inputs, missionnaire_inputs, signature_inputs
 from src.forms import trajet_inputs
+from src.profile_loader import load_profiles
 
 
 ROOT_DIR = Path(__file__).resolve().parent
 TEMPLATE_PATH = ROOT_DIR / "templates" / "ordre_mission_template.docx"
 GENERATED_DIR = ROOT_DIR / "generated"
+PROFILES_PATH = ROOT_DIR / "data" / "profils.yaml"
+
+profiles = load_profiles(PROFILES_PATH)
 
 st.set_page_config(page_title="OM Editor", page_icon="📄")
 
 st.title("📄 OM Editor")
 
+profile_names = ["Aucun"] + list(profiles.keys())
+
+selected_profile_name = st.selectbox(
+    "Profil missionnaire",
+    profile_names,
+)
+
+if selected_profile_name == "Aucun":
+    selected_profile = {}
+else:
+    selected_profile = profiles.get(
+        selected_profile_name,
+        {},
+    )
+
 with st.form("om_form"):
-    missionnaire = missionnaire_inputs()
+    missionnaire = missionnaire_inputs(selected_profile)
     mission = mission_inputs()
 
     st.header("3. Trajet aller")
