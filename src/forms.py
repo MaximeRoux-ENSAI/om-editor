@@ -101,10 +101,15 @@ def missionnaire_inputs(profile: dict | None = None) -> dict:
     return locals()
 
 
-def mission_inputs() -> dict:
+def mission_inputs(mission_type: dict | None = None) -> dict:
+    mission_type = mission_type or {}
+
     st.header("2. Mission")
 
-    motif_mission = st.text_area("Motif détaillé de la mission")
+    motif_mission = st.text_area(
+        "Motif détaillé de la mission",
+        value=mission_type.get("motif", ""),
+    )
 
     col1, col2 = st.columns(2)
     with col1:
