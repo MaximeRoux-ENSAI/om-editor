@@ -9,6 +9,7 @@ from src.forms import mission_inputs, missionnaire_inputs, signature_inputs
 from src.forms import subscription_inputs, vehicle_inputs
 from src.mission_type_loader import load_mission_types
 from src.profile_loader import load_profiles
+from src.validators import validate_form
 
 
 ROOT_DIR = Path(__file__).resolve().parent
@@ -183,6 +184,15 @@ if submitted:
             max_count=3,
         )
     )
+
+    if not validate_form(
+        missionnaire=missionnaire,
+        mission=mission,
+        trajets=trajets,
+        vehicle=vehicle,
+        subscription=subscription,
+    ):
+        st.stop()
 
     context = build_context(
         missionnaire=missionnaire,
