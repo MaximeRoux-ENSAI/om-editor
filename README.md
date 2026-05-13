@@ -8,12 +8,51 @@ Le projet repose sur une architecture simple et extensible basée sur Python, St
 
 ---
 
+# État du projet
+
+Le projet est déjà fonctionnel pour une grande partie des usages courants.
+
+Actuellement, `om-editor` permet de générer automatiquement le **corps principal d’un ordre de mission** pour les cas les plus fréquents :
+
+- stages ;
+- représentations d’école ;
+- forums / salons ;
+- formations ;
+- conférences ;
+- déplacements administratifs classiques.
+
+Les cas pris en charge incluent :
+
+- trajets en train ;
+- trajets avec carte d’abonnement SNCF ;
+- trajets en voiture ;
+- profils agent / élève ;
+- trajets multi-étapes ;
+- périodes de convenances personnelles.
+
+Certaines parties spécifiques des OM restent encore à compléter manuellement selon les besoins :
+
+- réservation d’hôtel ;
+- repas ;
+- avion ;
+- frais particuliers ;
+- informations CREST / laboratoire ;
+- validations administratives spécifiques.
+
+L’objectif du projet est donc :
+> automatiser la partie pénible, répétitive et chronophage des ordres de mission, tout en conservant la possibilité de compléter manuellement les cas particuliers.
+
+---
+
 # Fonctionnalités
 
 - Génération automatique d’ordres de mission `.docx`
 - Profils missionnaires sauvegardés
 - Types de mission préconfigurés
 - Préremplissage des informations récurrentes
+- Gestion des trajets multi-étapes
+- Support train / abonnement SNCF / voiture
+- Templates distincts agent / élève
 - Interface Streamlit légère et simple d’utilisation
 
 ---
@@ -120,9 +159,17 @@ stage:
   label: Stage
   motif: "Stage à préciser"
 
+representation_ensai:
+  label: Représentation ENSAI
+  motif: "Représentation de l’ENSAI lors d’un événement extérieur"
+
 formation:
   label: Formation
   motif: "Participation à une formation"
+
+conference:
+  label: Conférence
+  motif: "Participation à une conférence"
 ```
 
 ---
@@ -141,13 +188,15 @@ Le dossier est ignoré par Git afin d’éviter de versionner des documents gén
 
 # Roadmap
 
-Fonctionnalités prévues :
+Fonctionnalités envisagées :
 
 - Export PDF
-- Ajout dynamique d’étapes de trajet
 - Validation automatique des champs
 - Historique des missions
 - Déploiement web léger
+- Support complet des missions avion
+- Génération automatique des réservations
+- Remplissage avancé des frais et nuitées
 
 ---
 
