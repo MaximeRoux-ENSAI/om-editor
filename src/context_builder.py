@@ -4,6 +4,28 @@ from datetime import date
 def format_date(value: date) -> str:
     return value.strftime("%d/%m/%Y")
 
+def empty_trajet(prefix: str, index: int) -> dict[str, str]:
+    return {
+        f"{prefix}_{index}_depart_ville": "",
+        f"{prefix}_{index}_date_depart": "",
+        f"{prefix}_{index}_heure_depart": "",
+        f"{prefix}_{index}_arrivee_ville": "",
+        f"{prefix}_{index}_date_arrivee": "",
+        f"{prefix}_{index}_heure_arrivee": "",
+    }
+
+
+def complete_trajets(
+    trajets: list[dict[str, str]],
+    prefix: str,
+    max_count: int,
+) -> list[dict[str, str]]:
+    completed = trajets.copy()
+
+    for index in range(len(completed) + 1, max_count + 1):
+        completed.append(empty_trajet(prefix, index))
+
+    return completed
 
 def build_context(
     missionnaire: dict,

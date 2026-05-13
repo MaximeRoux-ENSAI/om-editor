@@ -138,3 +138,32 @@ def signature_inputs(ville_default: str = "") -> dict:
         )
 
     return locals()
+
+def dynamic_trajets_inputs(
+    prefix: str,
+    title: str,
+    min_value: int = 1,
+    max_value: int = 5,
+    default_value: int = 2,
+) -> list[dict[str, str]]:
+    st.header(title)
+
+    count = st.number_input(
+        f"Nombre d'étapes - {title.lower()}",
+        min_value=min_value,
+        max_value=max_value,
+        value=default_value,
+        step=1,
+        key=f"{prefix}_count",
+    )
+
+    trajets = []
+
+    for index in range(1, count + 1):
+        trajet = trajet_inputs(
+            prefix=f"{prefix}_{index}",
+            title=f"{title} {index}",
+        )
+        trajets.append(trajet)
+
+    return trajets
