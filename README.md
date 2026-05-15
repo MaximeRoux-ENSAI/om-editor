@@ -8,6 +8,24 @@ Le projet repose sur une architecture simple et extensible basée sur Python, St
 
 ---
 
+# 📚 Sommaire
+
+- [🚧 État du projet](#-état-du-projet)
+- [✨ Fonctionnalités](#-fonctionnalités)
+- [🛠️ Technologies utilisées](#️-technologies-utilisées)
+- [⚙️ Installation](#️-installation)
+- [▶️ Lancement](#️-lancement)
+- [🐳 Utilisation avec Docker](#-utilisation-avec-docker)
+- [📁 Structure du projet](#-structure-du-projet)
+- [👤 Configuration des profils](#-configuration-des-profils)
+- [🧾 Configuration des types de mission](#-configuration-des-types-de-mission)
+- [📄 Génération des documents](#-génération-des-documents)
+- [🗺️ Roadmap](#️-roadmap)
+- [👨‍💻 Auteur](#-auteur)
+- [📜 Licence](#-licence)
+
+---
+
 # 🚧 État du projet
 
 Le projet est déjà fonctionnel pour une grande partie des usages courants.
@@ -107,6 +125,56 @@ uv run streamlit run app.py
 ```
 
 ---
+
+# 🐳 Utilisation avec Docker
+
+L’application peut être exécutée dans un conteneur Docker, ce qui facilite le déploiement sur des plateformes comme Onyxia / SSPCloud.
+
+## 1. Construire l’image Docker
+
+Depuis la racine du projet :
+
+```bash
+docker build -t om-editor .
+```
+
+## 2. Lancer le conteneur
+
+```bash
+docker run -p 8501:8501 om-editor
+```
+
+L’application sera alors accessible à l’adresse :
+
+```text
+http://localhost:8501
+```
+
+## 3. Arrêter le conteneur
+
+Dans le terminal courant :
+
+```text
+CTRL + C
+```
+
+Ou, si le conteneur tourne en arrière-plan :
+
+```bash
+docker ps
+docker stop <container_id>
+```
+
+## 4. Fichiers Docker attendus
+
+Le projet utilise :
+
+```text
+Dockerfile
+.dockerignore
+```
+
+afin de permettre un déploiement simple et reproductible.
 
 # 📁 Structure du projet
 
@@ -212,7 +280,8 @@ Fonctionnalités envisagées :
 
 # 👨‍💻 Auteur
 
-- Maxime ROUX
+- Maxime ROUX  
+  GitHub : https://github.com/MaximeRoux-ENSAI
 
 ---
 
