@@ -4,6 +4,7 @@ import streamlit as st
 
 from src.context_builder import build_context, complete_trajets
 from src.docx_renderer import render_ordre_mission
+from src.pdf_exporter import export_pdf
 from src.forms import (
     accommodation_inputs,
     airplane_inputs,
@@ -89,22 +90,19 @@ def select_template(
             )
 
         return (
-            f"ordre_mission_template_{statut}_abonnement_"
-            f"{template_lines}_lignes.docx",
+            f"ordre_mission_template_{statut}_abonnement_{template_lines}_lignes.docx",
             template_lines,
         )
 
     if hebergement_type == "hotel":
         return (
-            f"ordre_mission_template_{statut}_hotel_"
-            f"{template_lines}_lignes.docx",
+            f"ordre_mission_template_{statut}_hotel_{template_lines}_lignes.docx",
             template_lines,
         )
 
     if hebergement_type == "autre":
         return (
-            f"ordre_mission_template_{statut}_hotel_autre_"
-            f"{template_lines}_lignes.docx",
+            f"ordre_mission_template_{statut}_hotel_autre_{template_lines}_lignes.docx",
             template_lines,
         )
 
@@ -139,9 +137,7 @@ def main() -> None:
     )
 
     st.title("📄 OM Editor")
-    st.caption(
-        "Génération automatique d'ordres de mission ENSAI / GENES"
-    )
+    st.caption("Génération automatique d'ordres de mission ENSAI / GENES")
 
     profile_names = ["Aucun"] + list(profiles.keys())
 
@@ -157,8 +153,7 @@ def main() -> None:
     )
 
     mission_type_options = {
-        key: value.get("label", key)
-        for key, value in mission_types.items()
+        key: value.get("label", key) for key, value in mission_types.items()
     }
 
     selected_mission_type_key = st.selectbox(
@@ -175,9 +170,7 @@ def main() -> None:
     statut = st.radio(
         "Statut",
         ["agent", "eleve"],
-        format_func=lambda value: (
-            "Agent" if value == "agent" else "Élève"
-        ),
+        format_func=lambda value: "Agent" if value == "agent" else "Élève",
         horizontal=True,
     )
 
@@ -247,11 +240,12 @@ def main() -> None:
 
         signature = signature_inputs(missionnaire["ville"])
 
-        submitted = st.form_submit_button(
-            "Générer l'ordre de mission"
+        submitted_docx = st.form_submit_button("Générer l'ordre de mission (DOCX)")
+        submitted_pdf = st.form_submit_button(
+            "Générer l'ordre de mission (PDF)", type="primary"
         )
 
-    if not submitted:
+    if not submitted_docx and not submitted_pdf:
         return
 
     template_name, template_lines = select_template(
@@ -265,10 +259,7 @@ def main() -> None:
     template_path = TEMPLATES_DIR / template_name
 
     if not template_path.exists():
-        st.error(
-            "Le template attendu est introuvable : "
-            f"`{template_name}`"
-        )
+        st.error(f"Le template attendu est introuvable : `{template_name}`")
         st.stop()
 
     trajets = []
@@ -317,8 +308,7 @@ def main() -> None:
     GENERATED_DIR.mkdir(exist_ok=True)
 
     output_path = GENERATED_DIR / (
-        f"OM_{context['nom']}_{context['prenom']}_"
-        f"{statut}_{transport}.docx"
+        f"OM_{context['nom']}_{context['prenom']}_{statut}_{transport}.docx"
     )
 
     render_ordre_mission(
@@ -327,21 +317,31 @@ def main() -> None:
         context=context,
     )
 
-    st.success(
-        "Ordre de mission généré avec le template : "
-        f"`{template_name}`"
-    )
+    if submitted_pdf:
+        pdf_output_path = output_path.with_suffix(".pdf")
+        export_pdf(output_path, pdf_output_path)
 
-    with open(output_path, "rb") as file:
-        st.download_button(
-            label="Télécharger le document",
-            data=file,
-            file_name=output_path.name,
-            mime=(
-                "application/vnd.openxmlformats-"
-                "officedocument.wordprocessingml.document"
-            ),
-        )
+        st.success(f"Ordre de mission PDF généré avec le template : `{template_name}`")
+        with open(pdf_output_path, "rb") as file:
+            st.download_button(
+                label="Télécharger le document (PDF)",
+                data=file,
+                file_name=pdf_output_path.name,
+                mime="application/pdf",
+                type="primary",
+            )
+    else:
+        st.success(f"Ordre de mission DOCX généré avec le template : `{template_name}`")
+        with open(output_path, "rb") as file:
+            st.download_button(
+                label="Télécharger le document (DOCX)",
+                data=file,
+                file_name=output_path.name,
+                mime=(
+                    "application/vnd.openxmlformats-"
+                    "officedocument.wordprocessingml.document"
+                ),
+            )
 
 
 if __name__ == "__main__":
