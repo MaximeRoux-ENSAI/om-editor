@@ -21,6 +21,7 @@ Le projet repose sur une architecture simple et extensible basée sur Python, St
 - [🧾 Configuration des types de mission](#-configuration-des-types-de-mission)
 - [📄 Génération des documents](#-génération-des-documents)
 - [🗺️ Roadmap](#️-roadmap)
+- [❓ FAQ](#-faq)
 - [👨‍💻 Auteur](#-auteur)
 - [📜 Licence](#-licence)
 
@@ -275,6 +276,91 @@ Fonctionnalités envisagées :
 - Déploiement web léger
 - Intégration plus poussée des frais administratifs
 - Support avancé des missions internationales
+
+---
+
+# ❓ FAQ
+
+## Pourquoi faut-il parfois appuyer sur “Entrée” après avoir changé le nombre de trajets ?
+
+L’application utilise actuellement les formulaires Streamlit (`st.form`) afin de conserver une interface cohérente et éviter des rechargements permanents de la page.
+
+À cause de cette limitation technique de Streamlit, lorsque vous utilisez les boutons `+` ou `-` pour modifier :
+- le nombre de trajets ;
+- le nombre de convenances personnelles ;
+- ou certaines valeurs numériques,
+
+il peut être nécessaire d’appuyer sur `Entrée` pour valider immédiatement le changement.
+
+Cela n’impacte pas la génération finale du document, mais uniquement l’actualisation visuelle du formulaire.
+
+Une amélioration ergonomique sur ce point pourra être étudiée dans une future version.
+
+---
+
+## Quels logiciels permettent d’ouvrir les documents générés ?
+
+Les documents générés sont au format `.docx`.
+
+Ils peuvent être ouverts avec :
+- Microsoft Word ;
+- LibreOffice Writer ;
+- OnlyOffice ;
+- Google Docs (avec quelques différences possibles de mise en page).
+
+Le rendu recommandé reste Microsoft Word ou LibreOffice.
+
+---
+
+## Est-ce que tous les types d’ordres de mission sont pris en charge ?
+
+Non.
+
+L’application couvre principalement les cas “classiques” rencontrés à l’ENSAI / GENES :
+- train ;
+- voiture ;
+- hébergement simple ;
+- abonnement SNCF ;
+- train + avion.
+
+Certains cas très spécifiques ou administrativement complexes peuvent encore nécessiter des modifications manuelles.
+
+---
+
+## Mes données personnelles sont-elles envoyées quelque part ?
+
+Non.
+
+L’application fonctionne localement et ne transmet aucune donnée à un serveur externe.
+
+Les profils utilisateurs sont stockés localement dans le dossier `data/`, qui est ignoré par Git.
+
+---
+
+## Puis-je modifier les templates Word ?
+
+Oui.
+
+Les modèles `.docx` présents dans le dossier `templates/` peuvent être adaptés ou personnalisés selon les besoins de votre établissement ou service.
+
+---
+
+## Pourquoi l’application génère-t-elle du `.docx` plutôt que du PDF ?
+
+Le format `.docx` permet :
+- de conserver un document facilement modifiable ;
+- de garantir une meilleure compatibilité avec les modèles administratifs existants ;
+- et d’éviter des dépendances lourdes liées à la conversion PDF.
+
+L’utilisateur peut ensuite exporter lui-même le document en PDF si nécessaire.
+
+---
+
+## Puis-je contribuer au projet ?
+
+Oui !
+
+Les issues, suggestions, améliorations ergonomiques et pull requests sont les bienvenues.
 
 ---
 
