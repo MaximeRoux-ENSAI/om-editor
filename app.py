@@ -30,6 +30,16 @@ STATUT_LABELS = {
     "agent": "Agent",
 }
 
+RESIDENCE_LABELS = {
+    "familiale": "Familiale",
+    "administrative": "Administrative",
+}
+
+RESIDENCE_TEMPLATE_DIRS = {
+    "familiale": "Familiale",
+    "administrative": "Administrative",
+}
+
 TRANSPORT_LABELS = {
     "train": "Train",
     "abonnement": "Train avec carte d'abonnement",
@@ -126,6 +136,11 @@ def select_template(
     )
 
 
+def get_template_path(residence: str, template_name: str) -> Path:
+    """Build the template path for the selected residence type."""
+    return TEMPLATES_DIR / RESIDENCE_TEMPLATE_DIRS[residence] / template_name
+
+
 def load_local_data() -> tuple[dict, dict]:
     """Load local YAML configuration files.
 
@@ -189,6 +204,14 @@ def main() -> None:
         list(STATUT_LABELS),
         index=0,
         format_func=lambda value: STATUT_LABELS[value],
+        horizontal=True,
+    )
+
+    residence = st.radio(
+        "Résidence de départ et de retour",
+        list(RESIDENCE_LABELS),
+        index=0,
+        format_func=lambda value: RESIDENCE_LABELS[value],
         horizontal=True,
     )
 
@@ -268,12 +291,16 @@ def main() -> None:
         accommodation=accommodation,
     )
 
-    template_path = TEMPLATES_DIR / template_name
+    template_path = get_template_path(
+        residence=residence,
+        template_name=template_name,
+    )
+    template_relative_path = template_path.relative_to(ROOT_DIR)
 
     if not template_path.exists():
         st.error(
             "Le template attendu est introuvable : "
-            f"`{template_name}`"
+            f"`{template_relative_path}`"
         )
         st.stop()
 
@@ -324,7 +351,7 @@ def main() -> None:
 
     output_path = GENERATED_DIR / (
         f"OM_{context['nom']}_{context['prenom']}_"
-        f"{statut}_{transport}.docx"
+        f"{statut}_{residence}_{transport}.docx"
     )
 
     render_ordre_mission(
@@ -335,7 +362,7 @@ def main() -> None:
 
     st.success(
         "Ordre de mission généré avec le template : "
-        f"`{template_name}`"
+        f"`{template_relative_path}`"
     )
 
     with open(output_path, "rb") as file:
